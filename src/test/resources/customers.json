@@ -1,0 +1,12 @@
+{
+  "customers": [
+    {
+      "Customer UUID": "b6b05cbf-ec30-428e-8d6b-763b55129a7e",
+      "Customer Name": "Test Company",
+      "Customer Commercial Name": "TTest",
+      "Customer Address": "Große Elbstr. 273, 22767 Hamburg, Germany",
+      "Customer Store Number": 13,
+      "Customer Number": 49
+    }
+  ]
+}
