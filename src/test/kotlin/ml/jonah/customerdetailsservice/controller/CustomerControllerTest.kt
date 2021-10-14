@@ -10,6 +10,8 @@ import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -67,5 +69,45 @@ internal class CustomerControllerTest {
         val result = mockMvc.perform(get("/v1/customers/{customerId}", customerId))
 
         result.andExpect(status().isNotFound)
+    }
+
+    @Test
+    internal fun `should return a paged list of customers`() {
+        val customerId = UUID.randomUUID()
+        val customerEntities = mutableListOf(
+            CustomerEntity(
+                id = customerId,
+                name = "Pizzeria Luigi Gmbh",
+                commercialName = "Tratoria Luigi",
+                address = null,
+                storeNumber = 20,
+                number = 100,
+                coordinates = null
+            )
+        )
+
+        val pageable = PageRequest.of(0, 15)
+
+        val customerEntitiesPage = PageImpl(customerEntities, pageable, 1)
+
+        `when`(customerService.getAllCustomers(pageable)).thenReturn(customerEntitiesPage)
+
+        val result = mockMvc.perform(
+            get("/v1/customers")
+                .param("page", "0")
+                .param("size", "15")
+        )
+
+        result.andExpect(status().isOk)
+            .andExpect(jsonPath("content.length()", `is`(1)))
+            .andExpect(jsonPath("content[0].id", `is`(customerId.toString())))
+            .andExpect(jsonPath("content[0].name", `is`("Pizzeria Luigi Gmbh")))
+            .andExpect(jsonPath("content[0].commercialName", `is`("Tratoria Luigi")))
+            .andExpect(jsonPath("content[0].storeNumber", `is`(20)))
+            .andExpect(jsonPath("content[0].number", `is`(100)))
+            .andExpect(jsonPath("pageMetadata.size", `is`(15)))
+            .andExpect(jsonPath("pageMetadata.totalElements", `is`(1)))
+            .andExpect(jsonPath("pageMetadata.totalPages", `is`(1)))
+            .andExpect(jsonPath("pageMetadata.number", `is`(0)))
     }
 }

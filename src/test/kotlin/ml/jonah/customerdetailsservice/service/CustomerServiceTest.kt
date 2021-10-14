@@ -11,6 +11,8 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import java.util.Optional
 import java.util.UUID
 
@@ -52,5 +54,30 @@ internal class CustomerServiceTest {
         assertThrows<CustomerNotFoundException> {
             customerService.getCustomerById(customerId)
         }
+    }
+
+    @Test
+    internal fun `should return paged list of customer entities`() {
+        val pageable = PageRequest.of(0, 15)
+
+        val customerEntities = mutableListOf(
+            CustomerEntity(
+                id = UUID.randomUUID(),
+                name = "Pizzeria Luigi Gmbh",
+                commercialName = "Tratoria Luigi",
+                address = null,
+                storeNumber = 20,
+                number = 100,
+                coordinates = null
+            )
+        )
+
+        val customerEntitiesPage = PageImpl(customerEntities, pageable, 2)
+
+        `when`(customerRepository.findAll(pageable)).thenReturn(customerEntitiesPage)
+
+        val actualCustomerEntitiesPage = customerService.getAllCustomers(pageable)
+
+        assertThat(actualCustomerEntitiesPage).isEqualTo(customerEntitiesPage)
     }
 }

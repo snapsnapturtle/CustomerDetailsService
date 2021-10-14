@@ -7,6 +7,8 @@ import ml.jonah.customerdetailsservice.exception.CustomerNotFoundException
 import ml.jonah.customerdetailsservice.service.CustomerService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
@@ -21,6 +23,21 @@ class CustomerController(
 ) {
 
     var logger: Logger = LoggerFactory.getLogger(CustomerController::class.java)
+
+    @GetMapping("/v1/customers")
+    fun getCustomers(@PageableDefault(size = 10) pageable: Pageable): CustomersResponse {
+        val customersPage = customerService.getAllCustomers(pageable)
+
+        return CustomersResponse(
+            content = customersPage.content.map { it.toCustomerResponse() },
+            pageMetadata = CustomersResponse.PageMetadata(
+                size = customersPage.size,
+                totalElements = customersPage.totalElements,
+                totalPages = customersPage.totalPages,
+                number = customersPage.number
+            )
+        )
+    }
 
     @GetMapping("/v1/customers/{customerId}")
     fun getCustomerById(@PathVariable customerId: UUID): CustomerResponse {
