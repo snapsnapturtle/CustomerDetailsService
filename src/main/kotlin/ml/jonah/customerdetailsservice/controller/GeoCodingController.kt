@@ -16,11 +16,12 @@ import kotlin.random.Random
  */
 @RestController
 class GeoCodingController {
-    var logger: Logger = LoggerFactory.getLogger(GeoCodingController::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(GeoCodingController::class.java)
 
     @PostMapping("/geocode")
     fun getCoordinatesFromAddress(@RequestBody addressRequest: AddressRequest): GeoCodingResponse {
         logger.info("Generating random coordinates for address <${addressRequest.address}>")
+
         return GeoCodingResponse(
             latitude = Random.nextDouble(-90.0, 90.0),
             longitude = Random.nextDouble(-180.0, 180.0)

@@ -22,7 +22,7 @@ class CustomerController(
     private val customerService: CustomerService
 ) {
 
-    var logger: Logger = LoggerFactory.getLogger(CustomerController::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(CustomerController::class.java)
 
     @GetMapping("/v1/customers")
     fun getCustomers(@PageableDefault(size = 10) pageable: Pageable): CustomersResponse {

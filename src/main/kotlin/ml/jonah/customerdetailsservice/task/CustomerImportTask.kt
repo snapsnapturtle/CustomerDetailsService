@@ -21,7 +21,7 @@ class CustomerImportTask(
 
     @EventListener(ApplicationReadyEvent::class)
     fun importCustomersOnApplicationReady() {
-        logger.info("Importing customers from file on application start")
+        logger.info("Importing customers from file on application start.")
         val customersFile = loadCustomersFromFile()
         customerImportService.importCustomers(customersFile)
     }
