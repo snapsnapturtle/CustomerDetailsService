@@ -1,0 +1,12 @@
+{
+  "customers": [
+    {
+      "Customer UUID": "acf14674-f7b6-44f8-8f4a-c14ca4734e3c",
+      "Customer Name": "Pizzeria Luigi Gmbh",
+      "Customer Commercial Name": "Tratoria Luigi",
+      "Customer Address": "Berliner Strasse 1, 13189 Berlin, Germany",
+      "Customer Store Number": 20,
+      "Customer Number": 100
+    }
+  ]
+}
