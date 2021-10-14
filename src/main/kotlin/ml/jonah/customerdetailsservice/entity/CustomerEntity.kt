@@ -31,10 +31,10 @@ data class CustomerEntity(
     val number: Int?,
 
     @Embedded
-    val geoLocation: GeoLocation?
+    val coordinates: Coordinates?
 ) {
     @Embeddable
-    data class GeoLocation(
+    data class Coordinates(
         @Column(name = "latitude")
         var latitude: Double?,
         @Column(name = "longitude")
