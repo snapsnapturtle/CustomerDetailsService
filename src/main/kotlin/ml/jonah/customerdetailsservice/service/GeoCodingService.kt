@@ -15,7 +15,7 @@ class GeoCodingService(
             address = address
         )
 
-        // future: add error handling when the address cannot be resolved
+        // future: handle errors when the address cannot be resolved i.e. service returns 404
         return geoCodingServiceClient.getCoordinatesForAddress(addressRequest).toGeoLocation()
     }
 
