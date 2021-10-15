@@ -21,7 +21,6 @@ import java.util.UUID
 class CustomerController(
     private val customerService: CustomerService
 ) {
-
     private val logger: Logger = LoggerFactory.getLogger(CustomerController::class.java)
 
     @GetMapping("/v1/customers")

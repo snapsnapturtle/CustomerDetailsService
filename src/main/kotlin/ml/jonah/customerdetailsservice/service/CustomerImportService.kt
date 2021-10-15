@@ -1,8 +1,8 @@
 package ml.jonah.customerdetailsservice.service
 
 import ml.jonah.customerdetailsservice.controller.CustomerImportController
-import ml.jonah.customerdetailsservice.datatransfer.CustomersFile
 import ml.jonah.customerdetailsservice.datatransfer.Coordinates
+import ml.jonah.customerdetailsservice.datatransfer.CustomersFile
 import ml.jonah.customerdetailsservice.entity.CustomerEntity
 import ml.jonah.customerdetailsservice.repository.CustomerRepository
 import org.slf4j.Logger
@@ -19,7 +19,9 @@ class CustomerImportService(
 
     fun importCustomers(customersFile: CustomersFile) {
         val customers = customersFile.customers.map { customerEntry ->
-            val resolvedLocation = customerEntry.address?.let { geoCodingService.getCoordinatesForAddress(it) }
+            val resolvedLocation = customerEntry.address?.let {
+                geoCodingService.getCoordinatesForAddress(it)
+            }
 
             CustomerEntity(
                 id = customerEntry.id,

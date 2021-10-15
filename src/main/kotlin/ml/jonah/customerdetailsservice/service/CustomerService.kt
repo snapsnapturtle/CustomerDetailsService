@@ -13,7 +13,9 @@ class CustomerService(
     private val customerRepository: CustomerRepository
 ) {
     fun getCustomerById(customerId: UUID): CustomerEntity {
-        return customerRepository.findById(customerId).orElseThrow { CustomerNotFoundException(customerId) }
+        return customerRepository.findById(customerId).orElseThrow {
+            CustomerNotFoundException(customerId)
+        }
     }
 
     fun getAllCustomers(pageable: Pageable): Page<CustomerEntity> {

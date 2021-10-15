@@ -37,6 +37,7 @@ data class CustomerEntity(
     data class Coordinates(
         @Column(name = "latitude")
         var latitude: Double?,
+
         @Column(name = "longitude")
         var longitude: Double?
     )
