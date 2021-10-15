@@ -1,11 +1,17 @@
 # CustomerDetailsService
 
 The customer details service is responsible for importing customer data, enriching the data and returning it through an
-http api to other consumers.
+http api to other consumers. It is using the following technologies:
+
+* Java 11
+* Spring Boot
+* Database H2 (In-Memory)
+* Maven
 
 ## Starting the service
 
-The service runs on port 8080 by default and can be started using maven.
+Ensure that Java 11 is available. The service runs on port 8080 by default and can be started using the following maven
+command.
 
 ```shell
 ./mvnw spring-boot:run
