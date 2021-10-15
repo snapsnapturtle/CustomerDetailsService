@@ -8,5 +8,4 @@ import org.springframework.context.annotation.Configuration
 @EnableFeignClients(
     basePackageClasses = [CustomerDetailsServiceApplication::class]
 )
-class FeignConfiguration {
-}
+class FeignConfiguration
