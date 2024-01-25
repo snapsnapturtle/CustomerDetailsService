@@ -34,3 +34,6 @@ build/
 
 ### IntelliJ ###
 .idea/
+
+### Gradle ###
+.gradle/
