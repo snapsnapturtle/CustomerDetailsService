@@ -1,0 +1,30 @@
+### Request single customer
+@customerId = acf14674-f7b6-44f8-8f4a-c14ca4734e3c
+
+GET http://{{baseUrl}}/v1/customers/{{customerId}}
+
+
+### Request all customers (paged)
+@page = 0
+@size = 10
+@sort = commercialName,asc
+
+GET http://{{baseUrl}}/v1/customers?page={{page}}&size={{size}}&sort={{sort}}
+
+
+### Import customer data
+POST http://{{baseUrl}}/v1/import-customers
+Content-Type: application/json
+
+{
+  "customers": [
+    {
+      "Customer Store Number": 20,
+      "Customer Number": 100,
+      "Customer Commercial Name": "Tratoria Luigi",
+      "Customer Name": "Pizzeria Luigi Gmbh",
+      "Customer UUID": "acf14674-f7b6-44f8-8f4a-c14ca4734e3c",
+      "Customer Address": "Berliner Strasse 1, 13189 Berlin, Germany"
+    }
+  ]
+}

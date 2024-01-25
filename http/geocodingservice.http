@@ -1,0 +1,9 @@
+### Fetch coordinates for an address
+@address = "1600 Amphitheatre Parkway, Mountain View, CA"
+
+POST http://{{baseUrl}}/geocode
+Content-Type: application/json
+
+{
+    "address": {{address}}
+}
