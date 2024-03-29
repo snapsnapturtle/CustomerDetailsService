@@ -9,8 +9,6 @@ stagedFiles=$(git diff --staged --name-only)
 status=$?
 
 if [ "$status" = 0 ] ; then
-    echo "Static analysis found no problems."
-
     for file in $stagedFiles; do
       if test -f "$file"; then
         git add $file
