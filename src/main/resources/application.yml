@@ -1,0 +1,6 @@
+spring:
+  jpa:
+    hibernate.ddl-auto: create-drop
+    open-in-view: false
+
+http.geocodingservice.url: http://localhost:8080
