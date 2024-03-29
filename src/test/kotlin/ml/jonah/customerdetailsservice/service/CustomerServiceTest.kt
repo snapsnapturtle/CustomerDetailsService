@@ -1,77 +1,89 @@
 package ml.jonah.customerdetailsservice.service
 
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.DescribeSpec
+import io.kotest.matchers.shouldBe
+import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import java.util.*
 import ml.jonah.customerdetailsservice.entity.CustomerEntity
 import ml.jonah.customerdetailsservice.exception.CustomerNotFoundException
 import ml.jonah.customerdetailsservice.repository.CustomerRepository
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 
-internal class CustomerServiceTest {
-    private val customerRepository = mockk<CustomerRepository>()
+class CustomerServiceTest :
+    DescribeSpec({
+        val customerRepository = mockk<CustomerRepository>()
 
-    private val customerService = CustomerService(customerRepository = customerRepository)
+        val customerService = CustomerService(customerRepository = customerRepository)
 
-    @Test
-    internal fun `should return existing customer by id`() {
-        val customerId = UUID.randomUUID()
+        afterTest { clearAllMocks() }
 
-        val expectedCustomerEntity =
-            CustomerEntity(
-                id = customerId,
-                name = "Pizzeria Luigi Gmbh",
-                commercialName = "Tratoria Luigi",
-                address = null,
-                storeNumber = 20,
-                number = 100,
-                coordinates = null
-            )
+        describe("getCustomerById") {
+            it("should return existing customer by id") {
+                val customerId = UUID.randomUUID()
 
-        every { customerRepository.findById(customerId) } returns
-            Optional.of(expectedCustomerEntity)
+                val expectedCustomerEntity =
+                    CustomerEntity(
+                        id = customerId,
+                        name = "Pizzeria Luigi Gmbh",
+                        commercialName = "Tratoria Luigi",
+                        address = null,
+                        storeNumber = 20,
+                        number = 100,
+                        coordinates = null
+                    )
 
-        val actualCustomerEntity = customerService.getCustomerById(customerId)
+                every { customerRepository.findById(customerId) } returns
+                    Optional.of(expectedCustomerEntity)
 
-        assertThat(actualCustomerEntity).isEqualTo(expectedCustomerEntity)
-    }
+                val actualCustomerEntity = customerService.getCustomerById(customerId)
 
-    @Test
-    internal fun `should throw CustomerNotFoundException when customer cannot be found in the database`() {
-        val customerId = UUID.randomUUID()
+                actualCustomerEntity shouldBe expectedCustomerEntity
+            }
 
-        every { customerRepository.findById(customerId) } returns Optional.empty()
+            it(
+                "should throw CustomerNotFoundException when customer cannot be found in the database"
+            ) {
+                val customerId = UUID.randomUUID()
 
-        assertThrows<CustomerNotFoundException> { customerService.getCustomerById(customerId) }
-    }
+                every { customerRepository.findById(customerId) } returns Optional.empty()
 
-    @Test
-    internal fun `should return paged list of customer entities`() {
-        val pageable = PageRequest.of(0, 15)
+                val thrownException =
+                    shouldThrow<CustomerNotFoundException> {
+                        customerService.getCustomerById(customerId)
+                    }
 
-        val customerEntities =
-            mutableListOf(
-                CustomerEntity(
-                    id = UUID.randomUUID(),
-                    name = "Pizzeria Luigi Gmbh",
-                    commercialName = "Tratoria Luigi",
-                    address = null,
-                    storeNumber = 20,
-                    number = 100,
-                    coordinates = null
-                )
-            )
+                thrownException.message shouldBe "Customer with id <$customerId> does not exist."
+            }
+        }
 
-        val customerEntitiesPage = PageImpl(customerEntities, pageable, 2)
+        describe("getAllCustomers") {
+            it("should return paged list of customer entities") {
+                val pageable = PageRequest.of(0, 15)
 
-        every { customerRepository.findAll(pageable) } returns customerEntitiesPage
+                val customerEntities =
+                    mutableListOf(
+                        CustomerEntity(
+                            id = UUID.randomUUID(),
+                            name = "Pizzeria Luigi Gmbh",
+                            commercialName = "Tratoria Luigi",
+                            address = null,
+                            storeNumber = 20,
+                            number = 100,
+                            coordinates = null
+                        )
+                    )
 
-        val actualCustomerEntitiesPage = customerService.getAllCustomers(pageable)
+                val expectedCustomerEntitiesPage = PageImpl(customerEntities, pageable, 2)
 
-        assertThat(actualCustomerEntitiesPage).isEqualTo(customerEntitiesPage)
-    }
-}
+                every { customerRepository.findAll(pageable) } returns expectedCustomerEntitiesPage
+
+                val actualCustomerEntitiesPage = customerService.getAllCustomers(pageable)
+
+                actualCustomerEntitiesPage shouldBe expectedCustomerEntitiesPage
+            }
+        }
+    })

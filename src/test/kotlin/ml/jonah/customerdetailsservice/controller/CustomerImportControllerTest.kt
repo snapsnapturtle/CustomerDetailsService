@@ -2,96 +2,101 @@ package ml.jonah.customerdetailsservice.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
-import io.mockk.every
-import io.mockk.verify
+import io.kotest.core.spec.style.DescribeSpec
+import io.kotest.extensions.spring.SpringExtension
+import io.mockk.*
 import java.util.*
 import ml.jonah.customerdetailsservice.datatransfer.CustomersFile
+import ml.jonah.customerdetailsservice.task.CustomerImportTask
 import ml.jonah.customerdetailsservice.usecase.ImportCustomersUseCase
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@ExtendWith(SpringExtension::class)
-@WebMvcTest(CustomerImportController::class)
-internal class CustomerImportControllerTest {
-    @Autowired private lateinit var mockMvc: MockMvc
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
+class CustomerImportControllerTest(
+    @MockkBean private val importCustomersUseCase: ImportCustomersUseCase,
+    @MockkBean(relaxed = true) private val customerImportTask: CustomerImportTask,
+    private val mockMvc: MockMvc,
+    private val objectMapper: ObjectMapper
+) :
+    DescribeSpec({
+        beforeTest { every { customerImportTask.importCustomersOnApplicationReady() } just runs }
 
-    @Autowired private lateinit var objectMapper: ObjectMapper
+        afterTest { clearAllMocks() }
 
-    @MockkBean private lateinit var importCustomersUseCase: ImportCustomersUseCase
-
-    @Test
-    internal fun `should import customers when requesting through endpoint`() {
-        val customersFile =
-            CustomersFile(
-                customers =
-                    listOf(
-                        CustomersFile.Customer(
-                            id = UUID.randomUUID(),
-                            name = "Pizzeria Luigi Gmbh",
-                            commercialName = "Tratoria Luigi",
-                            address = "Berliner Strasse 1, 13189 Berlin, Germany",
-                            storeNumber = 20,
-                            number = 100
-                        )
+        describe("importCustomers") {
+            it("should import customers when requesting through endpoint") {
+                val customersFile =
+                    CustomersFile(
+                        customers =
+                            listOf(
+                                CustomersFile.Customer(
+                                    id = UUID.randomUUID(),
+                                    name = "Pizzeria Luigi Gmbh",
+                                    commercialName = "Tratoria Luigi",
+                                    address = "Berliner Strasse 1, 13189 Berlin, Germany",
+                                    storeNumber = 20,
+                                    number = 100
+                                )
+                            )
                     )
-            )
 
-        val request = ImportCustomersUseCase.Request.FromFile(customersFile)
+                val request = ImportCustomersUseCase.Request.FromFile(customersFile)
 
-        every { importCustomersUseCase.invoke(request) } returns
-            ImportCustomersUseCase.Response.Success
+                every { importCustomersUseCase.invoke(request) } returns
+                    ImportCustomersUseCase.Response.Success
 
-        val result =
-            mockMvc.perform(
-                MockMvcRequestBuilders.post("/v1/import-customers")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsBytes(customersFile))
-            )
-
-        result.andExpect(status().isOk)
-
-        verify { importCustomersUseCase.invoke(request) }
-    }
-
-    @Test
-    internal fun `should return an error when the customers cannot be imported`() {
-        val customersFile =
-            CustomersFile(
-                customers =
-                    listOf(
-                        CustomersFile.Customer(
-                            id = UUID.randomUUID(),
-                            name = "Pizzeria Luigi Gmbh",
-                            commercialName = "Tratoria Luigi",
-                            address = "Berliner Strasse 1, 13189 Berlin, Germany",
-                            storeNumber = 20,
-                            number = 100
-                        )
+                val result =
+                    mockMvc.perform(
+                        MockMvcRequestBuilders.post("/v1/import-customers")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsBytes(customersFile))
                     )
-            )
 
-        val request = ImportCustomersUseCase.Request.FromFile(customersFile)
-        val expectedException = RuntimeException("Failed to process required step")
+                result.andExpect(status().isOk)
 
-        every { importCustomersUseCase.invoke(request) } returns
-            ImportCustomersUseCase.Response.Failure(expectedException)
+                verify { importCustomersUseCase.invoke(request) }
+            }
 
-        val result =
-            mockMvc.perform(
-                MockMvcRequestBuilders.post("/v1/import-customers")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsBytes(customersFile))
-            )
+            it("should return an error when the customers cannot be imported") {
+                val customersFile =
+                    CustomersFile(
+                        customers =
+                            listOf(
+                                CustomersFile.Customer(
+                                    id = UUID.randomUUID(),
+                                    name = "Pizzeria Luigi Gmbh",
+                                    commercialName = "Tratoria Luigi",
+                                    address = "Berliner Strasse 1, 13189 Berlin, Germany",
+                                    storeNumber = 20,
+                                    number = 100
+                                )
+                            )
+                    )
 
-        result.andExpect(status().isInternalServerError)
+                val request = ImportCustomersUseCase.Request.FromFile(customersFile)
+                val expectedException = RuntimeException("Failed to process required step")
 
-        verify { importCustomersUseCase.invoke(request) }
-    }
+                every { importCustomersUseCase.invoke(request) } returns
+                    ImportCustomersUseCase.Response.Failure(expectedException)
+
+                val result =
+                    mockMvc.perform(
+                        MockMvcRequestBuilders.post("/v1/import-customers")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsBytes(customersFile))
+                    )
+
+                result.andExpect(status().isInternalServerError)
+
+                verify { importCustomersUseCase.invoke(request) }
+            }
+        }
+    }) {
+    override fun extensions() = listOf(SpringExtension)
 }

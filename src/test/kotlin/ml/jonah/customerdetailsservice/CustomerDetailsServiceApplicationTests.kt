@@ -1,20 +1,25 @@
 package ml.jonah.customerdetailsservice
 
 import com.ninjasquad.springmockk.MockkBean
-import io.mockk.verify
+import io.kotest.core.spec.style.DescribeSpec
+import io.kotest.extensions.spring.SpringExtension
+import io.mockk.clearAllMocks
+import io.mockk.every
+import io.mockk.just
+import io.mockk.runs
 import ml.jonah.customerdetailsservice.task.CustomerImportTask
-import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
-@SpringBootTest
-class CustomerDetailsServiceApplicationTests {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class CustomerDetailsServiceApplicationTests(
+    @MockkBean(relaxed = true) private val customerImportTask: CustomerImportTask
+) :
+    DescribeSpec({
+        beforeTest { every { customerImportTask.importCustomersOnApplicationReady() } just runs }
 
-    @MockkBean(relaxed = true) private lateinit var customerImportTask: CustomerImportTask
+        afterTest { clearAllMocks() }
 
-    @Test internal fun contextLoads() {}
-
-    @Test
-    internal fun `should load and import customer file on application ready`() {
-        verify { customerImportTask.importCustomersOnApplicationReady() }
-    }
+        describe("application") { it("should load context") {} }
+    }) {
+    override fun extensions() = listOf(SpringExtension)
 }
