@@ -1,23 +1,24 @@
 package ml.jonah.customerdetailsservice.task
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import java.io.File
 import ml.jonah.customerdetailsservice.datatransfer.CustomersFile
 import ml.jonah.customerdetailsservice.usecase.ImportCustomersUseCase
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito.*
-import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(MockitoExtension::class)
 internal class CustomerImportTaskTest {
-    @InjectMocks private lateinit var customerImportTask: CustomerImportTask
+    private val importCustomersUseCase = mockk<ImportCustomersUseCase>()
 
-    @Mock private lateinit var importCustomersUseCase: ImportCustomersUseCase
+    private val objectMapper = mockk<ObjectMapper>()
 
-    @Mock private lateinit var objectMapper: ObjectMapper
+    private val customerImportTask =
+        CustomerImportTask(
+            importCustomersUseCase = importCustomersUseCase,
+            objectMapper = objectMapper
+        )
 
     @Test
     internal fun `should call the service layer to load and import customers`() {
@@ -25,14 +26,14 @@ internal class CustomerImportTaskTest {
 
         val request = ImportCustomersUseCase.Request.FromFile(customersFile)
 
-        `when`(objectMapper.readValue(any<File>(), any<Class<CustomersFile>>()))
-            .thenReturn(customersFile)
-        `when`(importCustomersUseCase.invoke(request))
-            .thenReturn(ImportCustomersUseCase.Response.Success)
+        every { objectMapper.readValue(any<File>(), any<Class<CustomersFile>>()) } returns
+            customersFile
+        every { importCustomersUseCase.invoke(request) } returns
+            ImportCustomersUseCase.Response.Success
 
         customerImportTask.importCustomersOnApplicationReady()
 
-        verify(importCustomersUseCase).invoke(request)
+        verify { importCustomersUseCase.invoke(request) }
     }
 
     @Test
@@ -43,13 +44,13 @@ internal class CustomerImportTaskTest {
 
         val expectedException = RuntimeException("Failed to process required step")
 
-        `when`(objectMapper.readValue(any<File>(), any<Class<CustomersFile>>()))
-            .thenReturn(customersFile)
-        `when`(importCustomersUseCase.invoke(request))
-            .thenReturn(ImportCustomersUseCase.Response.Failure(expectedException))
+        every { objectMapper.readValue(any<File>(), any<Class<CustomersFile>>()) } returns
+            customersFile
+        every { importCustomersUseCase.invoke(request) } returns
+            ImportCustomersUseCase.Response.Failure(expectedException)
 
         customerImportTask.importCustomersOnApplicationReady()
 
-        verify(importCustomersUseCase).invoke(request)
+        verify { importCustomersUseCase.invoke(request) }
     }
 }

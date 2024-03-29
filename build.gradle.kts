@@ -30,7 +30,12 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 	runtimeOnly("com.h2database:h2")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.springframework.boot:spring-boot-starter-test") {
+		exclude(module = "mockito-core")
+	}
+	testImplementation("io.kotest:kotest-runner-junit5:5.8.0")
+	testImplementation("io.mockk:mockk:1.13.10")
+	testImplementation("com.ninja-squad:springmockk:4.0.2")
 }
 
 dependencyManagement {

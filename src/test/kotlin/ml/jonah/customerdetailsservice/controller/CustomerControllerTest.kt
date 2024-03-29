@@ -1,16 +1,16 @@
 package ml.jonah.customerdetailsservice.controller
 
-import java.util.UUID
+import com.ninjasquad.springmockk.MockkBean
+import io.mockk.every
+import java.util.*
 import ml.jonah.customerdetailsservice.entity.CustomerEntity
 import ml.jonah.customerdetailsservice.exception.CustomerNotFoundException
 import ml.jonah.customerdetailsservice.service.CustomerService
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -24,7 +24,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 internal class CustomerControllerTest {
     @Autowired private lateinit var mockMvc: MockMvc
 
-    @MockBean private lateinit var customerService: CustomerService
+    @MockkBean private lateinit var customerService: CustomerService
 
     @Test
     internal fun `should return customer response for a single customer`() {
@@ -40,7 +40,7 @@ internal class CustomerControllerTest {
                 coordinates = CustomerEntity.Coordinates(latitude = 20.0, longitude = 30.0)
             )
 
-        `when`(customerService.getCustomerById(customerId)).thenReturn(customerEntity)
+        every { customerService.getCustomerById(customerId) } returns customerEntity
 
         val result = mockMvc.perform(get("/v1/customers/{customerId}", customerId))
 
@@ -60,8 +60,8 @@ internal class CustomerControllerTest {
     internal fun `should return response status 404 when customer does not exist`() {
         val customerId = UUID.randomUUID()
 
-        `when`(customerService.getCustomerById(customerId))
-            .thenThrow(CustomerNotFoundException(customerId))
+        every { customerService.getCustomerById(customerId) } throws
+            CustomerNotFoundException(customerId)
 
         val result = mockMvc.perform(get("/v1/customers/{customerId}", customerId))
 
@@ -88,7 +88,7 @@ internal class CustomerControllerTest {
 
         val customerEntitiesPage = PageImpl(customerEntities, pageable, 1)
 
-        `when`(customerService.getAllCustomers(pageable)).thenReturn(customerEntitiesPage)
+        every { customerService.getAllCustomers(pageable) } returns customerEntitiesPage
 
         val result = mockMvc.perform(get("/v1/customers").param("page", "0").param("size", "15"))
 

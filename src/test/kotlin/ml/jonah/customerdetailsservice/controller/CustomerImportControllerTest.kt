@@ -1,16 +1,16 @@
 package ml.jonah.customerdetailsservice.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.ninjasquad.springmockk.MockkBean
+import io.mockk.every
+import io.mockk.verify
 import java.util.*
 import ml.jonah.customerdetailsservice.datatransfer.CustomersFile
 import ml.jonah.customerdetailsservice.usecase.ImportCustomersUseCase
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mockito.verify
-import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
@@ -24,7 +24,7 @@ internal class CustomerImportControllerTest {
 
     @Autowired private lateinit var objectMapper: ObjectMapper
 
-    @MockBean private lateinit var importCustomersUseCase: ImportCustomersUseCase
+    @MockkBean private lateinit var importCustomersUseCase: ImportCustomersUseCase
 
     @Test
     internal fun `should import customers when requesting through endpoint`() {
@@ -45,8 +45,8 @@ internal class CustomerImportControllerTest {
 
         val request = ImportCustomersUseCase.Request.FromFile(customersFile)
 
-        `when`(importCustomersUseCase.invoke(request))
-            .thenReturn(ImportCustomersUseCase.Response.Success)
+        every { importCustomersUseCase.invoke(request) } returns
+            ImportCustomersUseCase.Response.Success
 
         val result =
             mockMvc.perform(
@@ -57,7 +57,7 @@ internal class CustomerImportControllerTest {
 
         result.andExpect(status().isOk)
 
-        verify(importCustomersUseCase).invoke(request)
+        verify { importCustomersUseCase.invoke(request) }
     }
 
     @Test
@@ -80,8 +80,8 @@ internal class CustomerImportControllerTest {
         val request = ImportCustomersUseCase.Request.FromFile(customersFile)
         val expectedException = RuntimeException("Failed to process required step")
 
-        `when`(importCustomersUseCase.invoke(request))
-            .thenReturn(ImportCustomersUseCase.Response.Failure(expectedException))
+        every { importCustomersUseCase.invoke(request) } returns
+            ImportCustomersUseCase.Response.Failure(expectedException)
 
         val result =
             mockMvc.perform(
@@ -92,6 +92,6 @@ internal class CustomerImportControllerTest {
 
         result.andExpect(status().isInternalServerError)
 
-        verify(importCustomersUseCase).invoke(request)
+        verify { importCustomersUseCase.invoke(request) }
     }
 }

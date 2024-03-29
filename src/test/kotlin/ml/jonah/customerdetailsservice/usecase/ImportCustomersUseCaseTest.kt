@@ -1,5 +1,8 @@
 package ml.jonah.customerdetailsservice.usecase
 
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import java.util.*
 import ml.jonah.customerdetailsservice.datatransfer.Coordinates
 import ml.jonah.customerdetailsservice.datatransfer.CustomersFile
@@ -8,20 +11,18 @@ import ml.jonah.customerdetailsservice.repository.CustomerRepository
 import ml.jonah.customerdetailsservice.service.GeoCodingService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito.verify
-import org.mockito.Mockito.`when`
-import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(MockitoExtension::class)
 internal class ImportCustomersUseCaseTest {
-    @InjectMocks private lateinit var importCustomersUseCase: ImportCustomersUseCase
 
-    @Mock private lateinit var customerRepository: CustomerRepository
+    private val customerRepository = mockk<CustomerRepository>()
 
-    @Mock private lateinit var geoCodingService: GeoCodingService
+    private val geoCodingService = mockk<GeoCodingService>()
+
+    private val importCustomersUseCase =
+        ImportCustomersUseCase(
+            customerRepository = customerRepository,
+            geoCodingService = geoCodingService
+        )
 
     @Test
     internal fun `should import customers without address to the database`() {
@@ -55,12 +56,14 @@ internal class ImportCustomersUseCaseTest {
                 )
             )
 
-        val request = ImportCustomersUseCase.Request.FromFile(customersFile)
+        every { customerRepository.saveAll(any<List<CustomerEntity>>()) } returns emptyList()
 
+        val request = ImportCustomersUseCase.Request.FromFile(customersFile)
         val response = importCustomersUseCase.invoke(request)
 
         assertEquals(response, ImportCustomersUseCase.Response.Success)
-        verify(customerRepository).saveAll(expectedCustomerEntities)
+
+        verify { customerRepository.saveAll(expectedCustomerEntities) }
     }
 
     @Test
@@ -96,16 +99,17 @@ internal class ImportCustomersUseCaseTest {
                 )
             )
 
-        `when`(geoCodingService.getCoordinatesForAddress(address))
-            .thenReturn(Coordinates(latitude = 10.0, longitude = 20.0))
+        every { geoCodingService.getCoordinatesForAddress(address) } returns
+            Coordinates(latitude = 10.0, longitude = 20.0)
+        every { customerRepository.saveAll(any<List<CustomerEntity>>()) } returns emptyList()
 
         val request = ImportCustomersUseCase.Request.FromFile(customersFile)
-
         val response = importCustomersUseCase.invoke(request)
 
         assertEquals(response, ImportCustomersUseCase.Response.Success)
 
-        verify(customerRepository).saveAll(expectedCustomerEntities)
+        verify { geoCodingService.getCoordinatesForAddress(address) }
+        verify { customerRepository.saveAll(expectedCustomerEntities) }
     }
 
     @Test
@@ -130,7 +134,7 @@ internal class ImportCustomersUseCaseTest {
 
         val expectedException = RuntimeException("Failed to load coordinates")
 
-        `when`(geoCodingService.getCoordinatesForAddress(address)).thenThrow(expectedException)
+        every { geoCodingService.getCoordinatesForAddress(address) } throws expectedException
 
         val request = ImportCustomersUseCase.Request.FromFile(customersFile)
 
