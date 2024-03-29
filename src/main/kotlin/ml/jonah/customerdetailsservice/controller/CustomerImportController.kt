@@ -12,18 +12,19 @@ import org.springframework.web.bind.annotation.RestController
 private val logger = KotlinLogging.logger {}
 
 @RestController
-class CustomerImportController(
-        private val importCustomersUseCase: ImportCustomersUseCase
-) {
+class CustomerImportController(private val importCustomersUseCase: ImportCustomersUseCase) {
 
     @PostMapping("/v1/import-customers")
     fun importCustomers(@RequestBody customersFileRequest: CustomersFile): ResponseEntity<Unit> {
         val request = ImportCustomersUseCase.Request.FromFile(customersFileRequest)
 
         return when (val response = importCustomersUseCase.invoke(request)) {
-            is ImportCustomersUseCase.Response.Success -> ResponseEntity.status(HttpStatus.OK).build()
+            is ImportCustomersUseCase.Response.Success ->
+                ResponseEntity.status(HttpStatus.OK).build()
             is ImportCustomersUseCase.Response.Failure -> {
-                logger.error { "Failed to import customers for request <$customersFileRequest>: ${response.exception}" }
+                logger.error {
+                    "Failed to import customers for request <$customersFileRequest>: ${response.exception}"
+                }
 
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
             }

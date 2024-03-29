@@ -1,5 +1,6 @@
 package ml.jonah.customerdetailsservice.controller
 
+import java.util.UUID
 import ml.jonah.customerdetailsservice.controller.message.CustomerResponse
 import ml.jonah.customerdetailsservice.controller.message.CustomersResponse
 import ml.jonah.customerdetailsservice.entity.CustomerEntity
@@ -14,26 +15,24 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
-import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
 
 @RestController
-class CustomerController(
-    private val customerService: CustomerService
-) {
+class CustomerController(private val customerService: CustomerService) {
     @GetMapping("/v1/customers")
     fun getCustomers(@PageableDefault(size = 10) pageable: Pageable): CustomersResponse {
         val customersPage = customerService.getAllCustomers(pageable)
 
         return CustomersResponse(
             content = customersPage.content.map { it.toCustomerResponse() },
-            pageMetadata = CustomersResponse.PageMetadata(
-                size = customersPage.size,
-                totalElements = customersPage.totalElements,
-                totalPages = customersPage.totalPages,
-                number = customersPage.number
-            )
+            pageMetadata =
+                CustomersResponse.PageMetadata(
+                    size = customersPage.size,
+                    totalElements = customersPage.totalElements,
+                    totalPages = customersPage.totalPages,
+                    number = customersPage.number
+                )
         )
     }
 
@@ -50,18 +49,17 @@ class CustomerController(
         logger.info(ex.message)
     }
 
-    private fun CustomerEntity.toCustomerResponse() = CustomerResponse(
-        id = id,
-        name = name,
-        commercialName = commercialName,
-        address = address,
-        storeNumber = storeNumber,
-        number = number,
-        coordinates = coordinates?.let {
-            CustomerResponse.Coordinates(
-                latitude = it.latitude,
-                longitude = it.longitude
-            )
-        }
-    )
+    private fun CustomerEntity.toCustomerResponse() =
+        CustomerResponse(
+            id = id,
+            name = name,
+            commercialName = commercialName,
+            address = address,
+            storeNumber = storeNumber,
+            number = number,
+            coordinates =
+                coordinates?.let {
+                    CustomerResponse.Coordinates(latitude = it.latitude, longitude = it.longitude)
+                }
+        )
 }

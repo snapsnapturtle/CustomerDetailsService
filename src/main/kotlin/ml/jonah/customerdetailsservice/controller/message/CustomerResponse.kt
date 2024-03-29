@@ -11,8 +11,5 @@ data class CustomerResponse(
     val number: Int?,
     val coordinates: Coordinates?
 ) {
-    data class Coordinates(
-        val latitude: Double?,
-        val longitude: Double?
-    )
+    data class Coordinates(val latitude: Double?, val longitude: Double?)
 }

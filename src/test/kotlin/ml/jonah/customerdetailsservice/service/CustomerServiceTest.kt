@@ -1,5 +1,7 @@
 package ml.jonah.customerdetailsservice.service
 
+import java.util.Optional
+import java.util.UUID
 import ml.jonah.customerdetailsservice.entity.CustomerEntity
 import ml.jonah.customerdetailsservice.exception.CustomerNotFoundException
 import ml.jonah.customerdetailsservice.repository.CustomerRepository
@@ -13,32 +15,30 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
-import java.util.Optional
-import java.util.UUID
 
 @ExtendWith(MockitoExtension::class)
 internal class CustomerServiceTest {
-    @InjectMocks
-    private lateinit var customerService: CustomerService
+    @InjectMocks private lateinit var customerService: CustomerService
 
-    @Mock
-    private lateinit var customerRepository: CustomerRepository
+    @Mock private lateinit var customerRepository: CustomerRepository
 
     @Test
     internal fun `should return existing customer by id`() {
         val customerId = UUID.randomUUID()
 
-        val expectedCustomerEntity = CustomerEntity(
-            id = customerId,
-            name = "Pizzeria Luigi Gmbh",
-            commercialName = "Tratoria Luigi",
-            address = null,
-            storeNumber = 20,
-            number = 100,
-            coordinates = null
-        )
+        val expectedCustomerEntity =
+            CustomerEntity(
+                id = customerId,
+                name = "Pizzeria Luigi Gmbh",
+                commercialName = "Tratoria Luigi",
+                address = null,
+                storeNumber = 20,
+                number = 100,
+                coordinates = null
+            )
 
-        `when`(customerRepository.findById(customerId)).thenReturn(Optional.of(expectedCustomerEntity))
+        `when`(customerRepository.findById(customerId))
+            .thenReturn(Optional.of(expectedCustomerEntity))
 
         val actualCustomerEntity = customerService.getCustomerById(customerId)
 
@@ -51,26 +51,25 @@ internal class CustomerServiceTest {
 
         `when`(customerRepository.findById(customerId)).thenReturn(Optional.empty())
 
-        assertThrows<CustomerNotFoundException> {
-            customerService.getCustomerById(customerId)
-        }
+        assertThrows<CustomerNotFoundException> { customerService.getCustomerById(customerId) }
     }
 
     @Test
     internal fun `should return paged list of customer entities`() {
         val pageable = PageRequest.of(0, 15)
 
-        val customerEntities = mutableListOf(
-            CustomerEntity(
-                id = UUID.randomUUID(),
-                name = "Pizzeria Luigi Gmbh",
-                commercialName = "Tratoria Luigi",
-                address = null,
-                storeNumber = 20,
-                number = 100,
-                coordinates = null
+        val customerEntities =
+            mutableListOf(
+                CustomerEntity(
+                    id = UUID.randomUUID(),
+                    name = "Pizzeria Luigi Gmbh",
+                    commercialName = "Tratoria Luigi",
+                    address = null,
+                    storeNumber = 20,
+                    number = 100,
+                    coordinates = null
+                )
             )
-        )
 
         val customerEntitiesPage = PageImpl(customerEntities, pageable, 2)
 

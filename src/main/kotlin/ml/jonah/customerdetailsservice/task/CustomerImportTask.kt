@@ -14,8 +14,8 @@ private val logger = KotlinLogging.logger {}
 
 @Component
 class CustomerImportTask(
-        private val importCustomersUseCase: ImportCustomersUseCase,
-        private val objectMapper: ObjectMapper
+    private val importCustomersUseCase: ImportCustomersUseCase,
+    private val objectMapper: ObjectMapper
 ) {
     private val customersFileLocation = "classpath:static/customers.json"
 
@@ -25,13 +25,16 @@ class CustomerImportTask(
 
         val customersFile = loadCustomersFromFile()
 
-        val request = ImportCustomersUseCase.Request.FromFile(
-                customersFile
-        )
+        val request = ImportCustomersUseCase.Request.FromFile(customersFile)
 
         when (val response = importCustomersUseCase.invoke(request)) {
-            is ImportCustomersUseCase.Response.Success -> logger.info("Completed customer import on application ready event")
-            is ImportCustomersUseCase.Response.Failure -> logger.error("Failed to import customers on application ready event", response.exception)
+            is ImportCustomersUseCase.Response.Success ->
+                logger.info("Completed customer import on application ready event")
+            is ImportCustomersUseCase.Response.Failure ->
+                logger.error(
+                    "Failed to import customers on application ready event",
+                    response.exception
+                )
         }
     }
 

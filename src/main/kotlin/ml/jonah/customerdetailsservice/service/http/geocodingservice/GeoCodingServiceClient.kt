@@ -9,5 +9,4 @@ interface GeoCodingServiceClient {
 
     @PostMapping("/geocode")
     fun getCoordinatesForAddress(@RequestBody addressRequest: AddressRequest): GeoCodingResponse
-
 }

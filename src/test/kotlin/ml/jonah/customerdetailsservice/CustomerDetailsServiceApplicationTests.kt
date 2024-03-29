@@ -9,12 +9,9 @@ import org.springframework.boot.test.mock.mockito.MockBean
 @SpringBootTest
 class CustomerDetailsServiceApplicationTests {
 
-    @MockBean
-    private lateinit var customerImportTask: CustomerImportTask
+    @MockBean private lateinit var customerImportTask: CustomerImportTask
 
-    @Test
-    internal fun contextLoads() {
-    }
+    @Test internal fun contextLoads() {}
 
     @Test
     internal fun `should load and import customer file on application ready`() {
