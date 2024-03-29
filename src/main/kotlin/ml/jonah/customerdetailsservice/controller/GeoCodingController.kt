@@ -2,12 +2,13 @@ package ml.jonah.customerdetailsservice.controller
 
 import ml.jonah.customerdetailsservice.service.http.geocodingservice.AddressRequest
 import ml.jonah.customerdetailsservice.service.http.geocodingservice.GeoCodingResponse
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import mu.KotlinLogging
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import kotlin.random.Random
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * This is a mock endpoint used by the GeoCodingServiceClient to simulate http requests to a different service.
@@ -17,8 +18,6 @@ import kotlin.random.Random
  */
 @RestController
 class GeoCodingController {
-    private val logger: Logger = LoggerFactory.getLogger(GeoCodingController::class.java)
-
     @PostMapping("/geocode")
     fun getCoordinatesFromAddress(@RequestBody addressRequest: AddressRequest): GeoCodingResponse {
         logger.info("Generating random coordinates for address <${addressRequest.address}>")

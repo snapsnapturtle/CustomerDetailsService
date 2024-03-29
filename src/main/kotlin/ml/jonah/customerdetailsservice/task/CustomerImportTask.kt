@@ -4,19 +4,19 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import ml.jonah.customerdetailsservice.datatransfer.CustomersFile
 import ml.jonah.customerdetailsservice.exception.CustomersFileNotFound
 import ml.jonah.customerdetailsservice.usecase.ImportCustomersUseCase
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import mu.KotlinLogging
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 import org.springframework.util.ResourceUtils
+
+private val logger = KotlinLogging.logger {}
 
 @Component
 class CustomerImportTask(
         private val importCustomersUseCase: ImportCustomersUseCase,
         private val objectMapper: ObjectMapper
 ) {
-    private val logger: Logger = LoggerFactory.getLogger(CustomerImportTask::class.java)
     private val customersFileLocation = "classpath:static/customers.json"
 
     @EventListener(ApplicationReadyEvent::class)
