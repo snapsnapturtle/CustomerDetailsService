@@ -6,7 +6,7 @@ plugins {
 	id("com.diffplug.spotless") version "6.25.0"
 	kotlin("jvm") version "1.9.24"
 	kotlin("plugin.spring") version "1.9.23"
-	kotlin("plugin.jpa") version "1.9.23"
+	kotlin("plugin.jpa") version "1.9.24"
 }
 
 group = "ml.jonah"
