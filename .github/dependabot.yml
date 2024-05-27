@@ -4,6 +4,12 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    groups:
+      react:
+        patterns:
+          - "jvm"
+          - "plugin.spring"
+          - "plugin.jpa"
   - package-ecosystem: github-actions
     directory: /
     schedule:
