@@ -20,7 +20,7 @@ repositories {
 	mavenCentral()
 }
 
-extra["springCloudVersion"] = "2023.0.0"
+extra["springCloudVersion"] = "2023.0.2"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
