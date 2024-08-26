@@ -4,9 +4,9 @@ plugins {
 	id("org.springframework.boot") version "3.3.2"
 	id("io.spring.dependency-management") version "1.1.6"
 	id("com.diffplug.spotless") version "6.25.0"
-	kotlin("jvm") version "2.0.10"
-	kotlin("plugin.spring") version "2.0.10"
-	kotlin("plugin.jpa") version "2.0.10"
+	kotlin("jvm") version "2.0.20"
+	kotlin("plugin.spring") version "2.0.20"
+	kotlin("plugin.jpa") version "2.0.20"
 }
 
 group = "ml.jonah"
