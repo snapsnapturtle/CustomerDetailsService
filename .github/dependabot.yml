@@ -12,6 +12,10 @@ updates:
           - "jvm"
           - "plugin.spring"
           - "plugin.jpa"
+      spring:
+        patterns:
+          - "org.springframework.boot"
+          - "org.springframework.cloud"
   - package-ecosystem: github-actions
     directory: /
     schedule:
