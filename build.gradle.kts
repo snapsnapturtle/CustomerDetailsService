@@ -34,7 +34,7 @@ dependencies {
 	}
 	testImplementation("io.kotest:kotest-runner-junit5:5.9.1")
 	testImplementation("io.kotest.extensions:kotest-extensions-spring:1.3.0")
-	testImplementation("io.mockk:mockk:1.13.14")
+	testImplementation("io.mockk:mockk:1.13.16")
 	testImplementation("com.ninja-squad:springmockk:4.0.2")
 }
 
