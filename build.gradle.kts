@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.springframework.boot") version "3.4.5"
+	id("org.springframework.boot") version "3.5.0"
 	id("io.spring.dependency-management") version "1.1.7"
 	id("com.diffplug.spotless") version "7.0.4"
 	kotlin("jvm") version "2.1.21"
@@ -40,7 +40,7 @@ dependencies {
 
 dependencyManagement {
 	imports {
-		mavenBom("org.springframework.cloud:spring-cloud-dependencies:2024.0.1")
+		mavenBom("org.springframework.cloud:spring-cloud-dependencies:2025.0.0")
 	}
 }
 
