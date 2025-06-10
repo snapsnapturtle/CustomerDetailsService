@@ -4,8 +4,6 @@ updates:
     directory: /
     schedule:
       interval: weekly
-    reviewers:
-      - snapsnapturtle
     groups:
       kotlin:
         patterns:
@@ -20,5 +18,3 @@ updates:
     directory: /
     schedule:
       interval: weekly
-    reviewers:
-      - snapsnapturtle
