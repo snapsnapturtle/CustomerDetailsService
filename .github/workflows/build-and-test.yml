@@ -3,19 +3,22 @@ name: Build and test
 on:
   workflow_call:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
-          distribution: 'temurin'
+          java-version: 21
+          distribution: temurin
           cache: gradle
 
       - name: Setup Gradle
@@ -23,3 +26,9 @@ jobs:
 
       - name: Build and test project
         run: ./gradlew build
+
+      - name: Publish test results
+        if: success() || failure()
+        uses: scacap/action-surefire-report@v1
+        with:
+          report_paths: "**/build/test-results/test/TEST-*.xml"
