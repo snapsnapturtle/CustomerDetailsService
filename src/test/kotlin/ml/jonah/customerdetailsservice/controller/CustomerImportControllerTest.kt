@@ -2,6 +2,7 @@ package ml.jonah.customerdetailsservice.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
+import io.kotest.core.extensions.ApplyExtension
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.extensions.spring.SpringExtension
 import io.mockk.*
@@ -18,6 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
+@ApplyExtension(SpringExtension::class)
 class CustomerImportControllerTest(
     @MockkBean private val importCustomersUseCase: ImportCustomersUseCase,
     @MockkBean(relaxed = true) private val customerImportTask: CustomerImportTask,
@@ -97,6 +99,4 @@ class CustomerImportControllerTest(
                 verify { importCustomersUseCase.invoke(request) }
             }
         }
-    }) {
-    override fun extensions() = listOf(SpringExtension)
-}
+    })

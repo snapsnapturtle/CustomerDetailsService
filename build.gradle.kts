@@ -10,6 +10,8 @@ plugins {
 	kotlin("plugin.jpa") version "2.2.10"
 }
 
+apply(plugin = "io.spring.dependency-management")
+
 group = "ml.jonah"
 version = "0.0.1-SNAPSHOT"
 
@@ -21,6 +23,7 @@ repositories {
 	mavenCentral()
 }
 
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
@@ -28,14 +31,17 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
-	runtimeOnly("com.h2database:h2")
-	testImplementation("org.springframework.boot:spring-boot-starter-test") {
-		exclude(module = "mockito-core")
-	}
-	testImplementation("io.kotest:kotest-runner-junit5:5.9.1")
-	testImplementation("io.kotest.extensions:kotest-extensions-spring:1.3.0")
+
+    runtimeOnly("com.h2database:h2")
+
+    testImplementation("io.kotest:kotest-runner-junit5:6.0.3")
+	testImplementation("io.kotest:kotest-extensions-spring:6.0.3")
 	testImplementation("io.mockk:mockk:1.14.5")
 	testImplementation("com.ninja-squad:springmockk:4.0.2")
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+        exclude(module = "mockito-core")
+    }
 }
 
 dependencyManagement {
