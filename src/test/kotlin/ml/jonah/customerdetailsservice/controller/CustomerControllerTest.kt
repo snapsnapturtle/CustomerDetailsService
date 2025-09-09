@@ -1,6 +1,7 @@
 package ml.jonah.customerdetailsservice.controller
 
 import com.ninjasquad.springmockk.MockkBean
+import io.kotest.core.extensions.ApplyExtension
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.extensions.spring.SpringExtension
 import io.mockk.clearAllMocks
@@ -23,6 +24,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
+@ApplyExtension(SpringExtension::class)
 class CustomerControllerTest(
     @MockkBean private val customerService: CustomerService,
     @MockkBean(relaxed = true) private val customerImportTask: CustomerImportTask,
@@ -174,6 +176,4 @@ class CustomerControllerTest(
                 result.andExpect(MockMvcResultMatchers.status().isNotFound)
             }
         }
-    }) {
-    override fun extensions() = listOf(SpringExtension)
-}
+    })
