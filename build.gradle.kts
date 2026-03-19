@@ -67,9 +67,6 @@ tasks.withType<Test> {
 	}
 }
 
-task("addPreCommitGitHookOnBuild") {
-	exec {
-		commandLine("cp", "./.hooks/pre-commit", "./.git/hooks/")
-	}
-	println("Added pre-commit git hook")
+tasks.register<Exec>("addPreCommitGitHookOnBuild") {
+	commandLine("cp", "./.hooks/pre-commit", "./.git/hooks/")
 }
