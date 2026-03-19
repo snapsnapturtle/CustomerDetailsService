@@ -1,6 +1,5 @@
 package ml.jonah.customerdetailsservice.controller
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.kotest.core.extensions.ApplyExtension
 import io.kotest.core.spec.style.DescribeSpec
@@ -16,6 +15,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import tools.jackson.databind.json.JsonMapper
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -24,7 +24,7 @@ class CustomerImportControllerTest(
     @MockkBean private val importCustomersUseCase: ImportCustomersUseCase,
     @MockkBean(relaxed = true) private val customerImportTask: CustomerImportTask,
     private val mockMvc: MockMvc,
-    private val objectMapper: ObjectMapper
+    private val jsonMapper: JsonMapper
 ) :
     DescribeSpec({
         beforeTest { every { customerImportTask.importCustomersOnApplicationReady() } just runs }
@@ -57,7 +57,7 @@ class CustomerImportControllerTest(
                     mockMvc.perform(
                         MockMvcRequestBuilders.post("/v1/import-customers")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsBytes(customersFile))
+                            .content(jsonMapper.writeValueAsBytes(customersFile))
                     )
 
                 result.andExpect(status().isOk)
@@ -91,7 +91,7 @@ class CustomerImportControllerTest(
                     mockMvc.perform(
                         MockMvcRequestBuilders.post("/v1/import-customers")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsBytes(customersFile))
+                            .content(jsonMapper.writeValueAsBytes(customersFile))
                     )
 
                 result.andExpect(status().isInternalServerError)

@@ -1,6 +1,5 @@
 package ml.jonah.customerdetailsservice.task
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.kotest.core.spec.style.DescribeSpec
 import io.mockk.clearAllMocks
 import io.mockk.every
@@ -9,16 +8,17 @@ import io.mockk.verify
 import java.io.File
 import ml.jonah.customerdetailsservice.datatransfer.CustomersFile
 import ml.jonah.customerdetailsservice.usecase.ImportCustomersUseCase
+import tools.jackson.databind.json.JsonMapper
 
 class CustomerImportTaskTest :
     DescribeSpec({
         val importCustomersUseCase = mockk<ImportCustomersUseCase>()
-        val objectMapper = mockk<ObjectMapper>()
+        val jsonMapper = mockk<JsonMapper>()
 
         val customerImportTask =
             CustomerImportTask(
                 importCustomersUseCase = importCustomersUseCase,
-                objectMapper = objectMapper
+                jsonMapper = jsonMapper
             )
 
         afterTest { clearAllMocks() }
@@ -28,7 +28,7 @@ class CustomerImportTaskTest :
                 val customersFile = CustomersFile(customers = emptyList())
                 val request = ImportCustomersUseCase.Request.FromFile(customersFile)
 
-                every { objectMapper.readValue(any<File>(), any<Class<CustomersFile>>()) } returns
+                every { jsonMapper.readValue(any<File>(), any<Class<CustomersFile>>()) } returns
                     customersFile
 
                 every { importCustomersUseCase.invoke(request) } returns
@@ -45,7 +45,7 @@ class CustomerImportTaskTest :
 
                 val expectedException = RuntimeException("Failed to process required step")
 
-                every { objectMapper.readValue(any<File>(), any<Class<CustomersFile>>()) } returns
+                every { jsonMapper.readValue(any<File>(), any<Class<CustomersFile>>()) } returns
                     customersFile
 
                 every { importCustomersUseCase.invoke(request) } returns

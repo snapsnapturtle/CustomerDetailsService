@@ -1,6 +1,5 @@
 package ml.jonah.customerdetailsservice.task
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import ml.jonah.customerdetailsservice.datatransfer.CustomersFile
 import ml.jonah.customerdetailsservice.exception.CustomersFileNotFound
 import ml.jonah.customerdetailsservice.usecase.ImportCustomersUseCase
@@ -9,13 +8,14 @@ import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 import org.springframework.util.ResourceUtils
+import tools.jackson.databind.json.JsonMapper
 
 private val logger = KotlinLogging.logger {}
 
 @Component
 class CustomerImportTask(
     private val importCustomersUseCase: ImportCustomersUseCase,
-    private val objectMapper: ObjectMapper
+    private val jsonMapper: JsonMapper
 ) {
     private val customersFileLocation = "classpath:static/customers.json"
 
@@ -45,6 +45,6 @@ class CustomerImportTask(
             throw CustomersFileNotFound(customersFileLocation)
         }
 
-        return objectMapper.readValue(file, CustomersFile::class.java)
+        return jsonMapper.readValue(file, CustomersFile::class.java)
     }
 }
