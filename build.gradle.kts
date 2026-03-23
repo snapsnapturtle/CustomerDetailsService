@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
 	id("org.springframework.boot") version "4.0.3"
 	id("io.spring.dependency-management") version "1.1.7"
-	id("com.diffplug.spotless") version "8.3.0"
+	id("com.diffplug.spotless") version "8.4.0"
 	kotlin("jvm") version "2.3.10"
 	kotlin("plugin.spring") version "2.3.10"
 	kotlin("plugin.jpa") version "2.3.10"
