@@ -28,7 +28,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 class CustomerControllerTest(
     @MockkBean private val customerService: CustomerService,
     @MockkBean(relaxed = true) private val customerImportTask: CustomerImportTask,
-    private val mockMvc: MockMvc
+    private val mockMvc: MockMvc,
 ) :
     DescribeSpec({
         beforeTest { every { customerImportTask.importCustomersOnApplicationReady() } just runs }
@@ -47,7 +47,7 @@ class CustomerControllerTest(
                             address = null,
                             storeNumber = 20,
                             number = 100,
-                            coordinates = null
+                            coordinates = null,
                         )
                     )
 
@@ -70,19 +70,19 @@ class CustomerControllerTest(
                     .andExpect(
                         MockMvcResultMatchers.jsonPath(
                             "content[0].id",
-                            Matchers.`is`(customerId.toString())
+                            Matchers.`is`(customerId.toString()),
                         )
                     )
                     .andExpect(
                         MockMvcResultMatchers.jsonPath(
                             "content[0].name",
-                            Matchers.`is`("Pizzeria Luigi Gmbh")
+                            Matchers.`is`("Pizzeria Luigi Gmbh"),
                         )
                     )
                     .andExpect(
                         MockMvcResultMatchers.jsonPath(
                             "content[0].commercialName",
-                            Matchers.`is`("Tratoria Luigi")
+                            Matchers.`is`("Tratoria Luigi"),
                         )
                     )
                     .andExpect(
@@ -97,7 +97,7 @@ class CustomerControllerTest(
                     .andExpect(
                         MockMvcResultMatchers.jsonPath(
                             "pageMetadata.totalElements",
-                            Matchers.`is`(1)
+                            Matchers.`is`(1),
                         )
                     )
                     .andExpect(
@@ -120,7 +120,7 @@ class CustomerControllerTest(
                         address = "Berliner Straße 1, 22102 Hamburg, Germany",
                         storeNumber = 20,
                         number = 100,
-                        coordinates = CustomerEntity.Coordinates(latitude = 20.0, longitude = 30.0)
+                        coordinates = CustomerEntity.Coordinates(latitude = 20.0, longitude = 30.0),
                     )
 
                 every { customerService.getCustomerById(customerId) } returns customerEntity
@@ -141,13 +141,13 @@ class CustomerControllerTest(
                     .andExpect(
                         MockMvcResultMatchers.jsonPath(
                             "commercialName",
-                            Matchers.`is`("Tratoria Luigi")
+                            Matchers.`is`("Tratoria Luigi"),
                         )
                     )
                     .andExpect(
                         MockMvcResultMatchers.jsonPath(
                             "address",
-                            Matchers.`is`("Berliner Straße 1, 22102 Hamburg, Germany")
+                            Matchers.`is`("Berliner Straße 1, 22102 Hamburg, Germany"),
                         )
                     )
                     .andExpect(MockMvcResultMatchers.jsonPath("storeNumber", Matchers.`is`(20)))

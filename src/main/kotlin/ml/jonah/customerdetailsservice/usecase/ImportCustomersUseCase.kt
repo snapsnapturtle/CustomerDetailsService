@@ -13,7 +13,7 @@ private val logger = KotlinLogging.logger {}
 @Component
 class ImportCustomersUseCase(
     private val customerRepository: CustomerRepository,
-    private val geoCodingService: GeoCodingService
+    private val geoCodingService: GeoCodingService,
 ) {
     operator fun invoke(request: Request): Response {
         try {
@@ -22,28 +22,27 @@ class ImportCustomersUseCase(
                     is Request.FromFile -> request.customersFile.customers
                 }
 
-            val customers =
-                customersToImport.map { customerEntry ->
-                    val resolvedLocation =
-                        customerEntry.address?.let {
-                            val address = geoCodingService.getCoordinatesForAddress(it)
-                            logger.info {
-                                "Resolved address for customer <${customerEntry.id}> to <$address>"
-                            }
-
-                            address
+            val customers = customersToImport.map { customerEntry ->
+                val resolvedLocation =
+                    customerEntry.address?.let {
+                        val address = geoCodingService.getCoordinatesForAddress(it)
+                        logger.info {
+                            "Resolved address for customer <${customerEntry.id}> to <$address>"
                         }
 
-                    CustomerEntity(
-                        id = customerEntry.id,
-                        name = customerEntry.name,
-                        commercialName = customerEntry.commercialName,
-                        address = customerEntry.address,
-                        storeNumber = customerEntry.storeNumber,
-                        number = customerEntry.number,
-                        coordinates = resolvedLocation?.toCoordinates()
-                    )
-                }
+                        address
+                    }
+
+                CustomerEntity(
+                    id = customerEntry.id,
+                    name = customerEntry.name,
+                    commercialName = customerEntry.commercialName,
+                    address = customerEntry.address,
+                    storeNumber = customerEntry.storeNumber,
+                    number = customerEntry.number,
+                    coordinates = resolvedLocation?.toCoordinates(),
+                )
+            }
 
             logger.info { "Importing <${customers.size}> customer(s) to database" }
 

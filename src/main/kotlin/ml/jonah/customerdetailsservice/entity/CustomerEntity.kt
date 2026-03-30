@@ -17,11 +17,11 @@ data class CustomerEntity(
     @Column(name = "address") val address: String?,
     @Column(name = "store_number") val storeNumber: Int?,
     @Column(name = "number") val number: Int?,
-    @Embedded val coordinates: Coordinates?
+    @Embedded val coordinates: Coordinates?,
 ) {
     @Embeddable
     data class Coordinates(
         @Column(name = "latitude") var latitude: Double?,
-        @Column(name = "longitude") var longitude: Double?
+        @Column(name = "longitude") var longitude: Double?,
     )
 }

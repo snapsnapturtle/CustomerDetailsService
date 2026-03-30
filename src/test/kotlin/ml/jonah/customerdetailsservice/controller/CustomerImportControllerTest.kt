@@ -24,7 +24,7 @@ class CustomerImportControllerTest(
     @MockkBean private val importCustomersUseCase: ImportCustomersUseCase,
     @MockkBean(relaxed = true) private val customerImportTask: CustomerImportTask,
     private val mockMvc: MockMvc,
-    private val jsonMapper: JsonMapper
+    private val jsonMapper: JsonMapper,
 ) :
     DescribeSpec({
         beforeTest { every { customerImportTask.importCustomersOnApplicationReady() } just runs }
@@ -43,7 +43,7 @@ class CustomerImportControllerTest(
                                     commercialName = "Tratoria Luigi",
                                     address = "Berliner Strasse 1, 13189 Berlin, Germany",
                                     storeNumber = 20,
-                                    number = 100
+                                    number = 100,
                                 )
                             )
                     )
@@ -76,7 +76,7 @@ class CustomerImportControllerTest(
                                     commercialName = "Tratoria Luigi",
                                     address = "Berliner Strasse 1, 13189 Berlin, Germany",
                                     storeNumber = 20,
-                                    number = 100
+                                    number = 100,
                                 )
                             )
                     )

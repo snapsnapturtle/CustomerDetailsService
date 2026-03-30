@@ -18,7 +18,7 @@ class CustomerImportTaskTest :
         val customerImportTask =
             CustomerImportTask(
                 importCustomersUseCase = importCustomersUseCase,
-                jsonMapper = jsonMapper
+                jsonMapper = jsonMapper,
             )
 
         afterTest { clearAllMocks() }

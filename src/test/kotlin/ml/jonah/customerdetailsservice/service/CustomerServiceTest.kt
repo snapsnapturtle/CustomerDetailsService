@@ -33,7 +33,7 @@ class CustomerServiceTest :
                         address = null,
                         storeNumber = 20,
                         number = 100,
-                        coordinates = null
+                        coordinates = null,
                     )
 
                 every { customerRepository.findById(customerId) } returns
@@ -73,7 +73,7 @@ class CustomerServiceTest :
                             address = null,
                             storeNumber = 20,
                             number = 100,
-                            coordinates = null
+                            coordinates = null,
                         )
                     )
 

@@ -31,8 +31,8 @@ class CustomerController(private val customerService: CustomerService) {
                     size = customersPage.size,
                     totalElements = customersPage.totalElements,
                     totalPages = customersPage.totalPages,
-                    number = customersPage.number
-                )
+                    number = customersPage.number,
+                ),
         )
     }
 
@@ -60,6 +60,6 @@ class CustomerController(private val customerService: CustomerService) {
             coordinates =
                 coordinates?.let {
                     CustomerResponse.Coordinates(latitude = it.latitude, longitude = it.longitude)
-                }
+                },
         )
 }

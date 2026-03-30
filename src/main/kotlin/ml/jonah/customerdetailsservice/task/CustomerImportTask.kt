@@ -15,7 +15,7 @@ private val logger = KotlinLogging.logger {}
 @Component
 class CustomerImportTask(
     private val importCustomersUseCase: ImportCustomersUseCase,
-    private val jsonMapper: JsonMapper
+    private val jsonMapper: JsonMapper,
 ) {
     private val customersFileLocation = "classpath:static/customers.json"
 
@@ -33,7 +33,7 @@ class CustomerImportTask(
             is ImportCustomersUseCase.Response.Failure ->
                 logger.error(
                     "Failed to import customers on application ready event",
-                    response.exception
+                    response.exception,
                 )
         }
     }

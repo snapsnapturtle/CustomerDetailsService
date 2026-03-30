@@ -5,6 +5,6 @@ data class CustomersResponse(val content: List<CustomerResponse>, val pageMetada
         val size: Int,
         val totalElements: Long,
         val totalPages: Int,
-        val number: Int
+        val number: Int,
     )
 }

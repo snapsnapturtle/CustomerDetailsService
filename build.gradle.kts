@@ -51,7 +51,7 @@ dependencyManagement {
 	}
 }
 
-spotless { kotlin { ktfmt("0.47").kotlinlangStyle() } }
+spotless { kotlin { ktfmt("0.62").kotlinlangStyle() } }
 
 tasks.withType<KotlinCompile> {
 	compilerOptions {
