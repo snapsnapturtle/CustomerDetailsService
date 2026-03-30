@@ -34,8 +34,8 @@ dependencies {
 
     runtimeOnly("com.h2database:h2")
 
-    testImplementation("io.kotest:kotest-runner-junit5:6.1.7")
-	testImplementation("io.kotest:kotest-extensions-spring:6.1.7")
+    testImplementation("io.kotest:kotest-runner-junit5:6.1.9")
+	testImplementation("io.kotest:kotest-extensions-spring:6.1.9")
 	testImplementation("io.mockk:mockk:1.14.9")
 	testImplementation("com.ninja-squad:springmockk:5.0.1")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
