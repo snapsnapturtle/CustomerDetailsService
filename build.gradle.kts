@@ -5,9 +5,9 @@ plugins {
 	id("org.springframework.boot") version "4.0.5"
 	id("io.spring.dependency-management") version "1.1.7"
 	id("com.diffplug.spotless") version "8.4.0"
-	kotlin("jvm") version "2.3.10"
-	kotlin("plugin.spring") version "2.3.10"
-	kotlin("plugin.jpa") version "2.3.10"
+	kotlin("jvm") version "2.3.20"
+	kotlin("plugin.spring") version "2.3.20"
+	kotlin("plugin.jpa") version "2.3.20"
 }
 
 apply(plugin = "io.spring.dependency-management")
