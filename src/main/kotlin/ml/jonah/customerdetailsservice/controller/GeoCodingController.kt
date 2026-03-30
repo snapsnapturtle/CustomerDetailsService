@@ -24,7 +24,7 @@ class GeoCodingController {
 
         return GeoCodingResponse(
             latitude = Random.nextDouble(-90.0, 90.0),
-            longitude = Random.nextDouble(-180.0, 180.0)
+            longitude = Random.nextDouble(-180.0, 180.0),
         )
     }
 }

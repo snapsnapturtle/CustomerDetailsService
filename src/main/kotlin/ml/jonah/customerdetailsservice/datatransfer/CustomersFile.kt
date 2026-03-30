@@ -10,6 +10,6 @@ data class CustomersFile(val customers: List<Customer>) {
         @JsonProperty("Customer Commercial Name") val commercialName: String?,
         @JsonProperty("Customer Address") val address: String?,
         @JsonProperty("Customer Store Number") val storeNumber: Int?,
-        @JsonProperty("Customer Number") val number: Int?
+        @JsonProperty("Customer Number") val number: Int?,
     )
 }

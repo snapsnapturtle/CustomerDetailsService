@@ -9,7 +9,7 @@ data class CustomerResponse(
     val address: String?,
     val storeNumber: Int?,
     val number: Int?,
-    val coordinates: Coordinates?
+    val coordinates: Coordinates?,
 ) {
     data class Coordinates(val latitude: Double?, val longitude: Double?)
 }

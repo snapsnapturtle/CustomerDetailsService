@@ -21,7 +21,7 @@ class ImportCustomersUseCaseTest :
         val importCustomersUseCase =
             ImportCustomersUseCase(
                 customerRepository = customerRepository,
-                geoCodingService = geoCodingService
+                geoCodingService = geoCodingService,
             )
 
         afterTest { clearAllMocks() }
@@ -40,7 +40,7 @@ class ImportCustomersUseCaseTest :
                                     commercialName = "Tratoria Luigi",
                                     address = null,
                                     storeNumber = 20,
-                                    number = 100
+                                    number = 100,
                                 )
                             )
                     )
@@ -54,7 +54,7 @@ class ImportCustomersUseCaseTest :
                             address = null,
                             storeNumber = 20,
                             number = 100,
-                            coordinates = null
+                            coordinates = null,
                         )
                     )
 
@@ -83,7 +83,7 @@ class ImportCustomersUseCaseTest :
                                     commercialName = "Tratoria Luigi",
                                     address = address,
                                     storeNumber = 20,
-                                    number = 100
+                                    number = 100,
                                 )
                             )
                     )
@@ -98,7 +98,7 @@ class ImportCustomersUseCaseTest :
                             storeNumber = 20,
                             number = 100,
                             coordinates =
-                                CustomerEntity.Coordinates(latitude = 10.0, longitude = 20.0)
+                                CustomerEntity.Coordinates(latitude = 10.0, longitude = 20.0),
                         )
                     )
 
@@ -130,7 +130,7 @@ class ImportCustomersUseCaseTest :
                                     commercialName = "Tratoria Luigi",
                                     address = address,
                                     storeNumber = 20,
-                                    number = 100
+                                    number = 100,
                                 )
                             )
                     )
