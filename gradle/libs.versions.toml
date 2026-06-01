@@ -1,2 +1,2 @@
 [libraries]
-ktfmt = { module = "com.facebook:ktfmt", version = "0.62" }
+ktfmt = { module = "com.facebook:ktfmt", version = "0.63" }
