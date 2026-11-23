@@ -47,7 +47,7 @@ dependencies {
 
 dependencyManagement {
 	imports {
-		mavenBom("org.springframework.cloud:spring-cloud-dependencies:2025.1.4")
+		mavenBom("org.springframework.cloud:spring-cloud-dependencies:2026.0.0")
 	}
 }
 
